@@ -10,6 +10,8 @@ out/
 *.png
 *.svg
 *.csv
+scripts/_tmp_analisis/
+scripts/_reac_base.txt
 
 # IDEs
 .vscode/
