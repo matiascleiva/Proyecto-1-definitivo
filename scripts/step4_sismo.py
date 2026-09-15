@@ -79,6 +79,9 @@ def main():
     n_col = meta["n_col"]
     n_mur = meta["n_mur"]
     apoyos = meta["apoyos"]
+    vigas_ids = meta["vigas_ids"]
+    VIG = {k: vigas_ids[(k - 1)::S.N_NIVELES]
+           for k in range(1, S.N_NIVELES + 1)}
     BX = float(json.loads((OUT / f"etapa{etapa}" / "losas_101.json")
                           .read_text(encoding="utf-8"))["largo_x_m"])
     BY = float(json.loads((OUT / f"etapa{etapa}" / "losas_101.json")
@@ -102,6 +105,7 @@ def main():
           f"NBASE = {n_col}",
           f"MWAL = {j_muros!r}",
           f"COLS = [{', '.join(marcas_col)}]",
+          f"VIG = {VIG!r}",
           f"QG = {S.Q_SUB:g}", f"SPP = {S.SPP_COL:g}",
           "def _anal():",
           "    system('BandSPD'); numberer('RCM')",
@@ -197,6 +201,8 @@ def main():
                "    for j in MWAL:",
                "        lf = eleResponse(12000 + k * 1000 + j, 'localForces')",
                f"        col[k]['MUR-' + str(j)] = lf",
+               "    for etag in VIG[k]:",
+               "        col[k]['B-' + str(etag)] = eleResponse(etag, 'localForces')",
                "todo[" + repr(nm) + "] = dict("
                "V=abs(Vbase), disp=disp, drift=drift, col=col)"]
         LJ += LI
