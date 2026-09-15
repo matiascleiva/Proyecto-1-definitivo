@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+env/
+venv/
+
+# Generated outputs
+out/
+*.png
+*.svg
+*.csv
+
+# IDEs
+.vscode/
+.idea/
+
+# Unity
+unity/**/Temp/
+unity/**/Logs/
+unity/**/Library/
+unity/**/UserSettings/
+unity/**/Obj/
