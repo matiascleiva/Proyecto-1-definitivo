@@ -1,0 +1,274 @@
+[
+  {
+    "tag": 1,
+    "nombre": "1-E",
+    "x_m": 0.0,
+    "y_m": 0.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 101,
+    "nombre": "1-E",
+    "x_m": 0.0,
+    "y_m": 0.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 2,
+    "nombre": "1-F",
+    "x_m": 0.0,
+    "y_m": 10.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 102,
+    "nombre": "1-F",
+    "x_m": 0.0,
+    "y_m": 10.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 3,
+    "nombre": "1-G",
+    "x_m": 0.0,
+    "y_m": 20.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 103,
+    "nombre": "1-G",
+    "x_m": 0.0,
+    "y_m": 20.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 4,
+    "nombre": "1-H",
+    "x_m": 0.0,
+    "y_m": 30.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 104,
+    "nombre": "1-H",
+    "x_m": 0.0,
+    "y_m": 30.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 5,
+    "nombre": "1-I",
+    "x_m": 0.0,
+    "y_m": 40.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 105,
+    "nombre": "1-I",
+    "x_m": 0.0,
+    "y_m": 40.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 6,
+    "nombre": "2-E",
+    "x_m": 8.9,
+    "y_m": 0.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 106,
+    "nombre": "2-E",
+    "x_m": 8.9,
+    "y_m": 0.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 7,
+    "nombre": "2-F",
+    "x_m": 8.9,
+    "y_m": 10.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 107,
+    "nombre": "2-F",
+    "x_m": 8.9,
+    "y_m": 10.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 8,
+    "nombre": "2-G",
+    "x_m": 8.9,
+    "y_m": 20.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 108,
+    "nombre": "2-G",
+    "x_m": 8.9,
+    "y_m": 20.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 9,
+    "nombre": "2-H",
+    "x_m": 8.9,
+    "y_m": 30.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 109,
+    "nombre": "2-H",
+    "x_m": 8.9,
+    "y_m": 30.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 10,
+    "nombre": "2-I",
+    "x_m": 8.9,
+    "y_m": 40.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 110,
+    "nombre": "2-I",
+    "x_m": 8.9,
+    "y_m": 40.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 11,
+    "nombre": "2-J",
+    "x_m": 8.9,
+    "y_m": 45.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 111,
+    "nombre": "2-J",
+    "x_m": 8.9,
+    "y_m": 45.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 12,
+    "nombre": "3-E",
+    "x_m": 16.15,
+    "y_m": 0.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 112,
+    "nombre": "3-E",
+    "x_m": 16.15,
+    "y_m": 0.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 13,
+    "nombre": "3-F",
+    "x_m": 16.15,
+    "y_m": 10.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 113,
+    "nombre": "3-F",
+    "x_m": 16.15,
+    "y_m": 10.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 14,
+    "nombre": "3-G",
+    "x_m": 16.15,
+    "y_m": 20.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 114,
+    "nombre": "3-G",
+    "x_m": 16.15,
+    "y_m": 20.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 15,
+    "nombre": "3-H",
+    "x_m": 16.15,
+    "y_m": 30.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 115,
+    "nombre": "3-H",
+    "x_m": 16.15,
+    "y_m": 30.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 16,
+    "nombre": "3-I",
+    "x_m": 16.15,
+    "y_m": 40.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 116,
+    "nombre": "3-I",
+    "x_m": 16.15,
+    "y_m": 40.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  },
+  {
+    "tag": 17,
+    "nombre": "3-J",
+    "x_m": 16.15,
+    "y_m": 45.0,
+    "z_m": 0.0,
+    "nivel": "S0_fundaciones"
+  },
+  {
+    "tag": 117,
+    "nombre": "3-J",
+    "x_m": 16.15,
+    "y_m": 45.0,
+    "z_m": 3.96,
+    "nivel": "Z1S"
+  }
+]

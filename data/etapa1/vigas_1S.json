@@ -1,0 +1,47 @@
+{
+  "nivel": "1S",
+  "z_m": 3.96,
+  "seccion": "V60x80",
+  "vigas": [
+    {"elementTag": 201, "iNode": 101, "jNode": 102, "eje": "1", "tramo": "E-F", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 202, "iNode": 102, "jNode": 103, "eje": "1", "tramo": "F-G", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 203, "iNode": 103, "jNode": 104, "eje": "1", "tramo": "G-H", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 204, "iNode": 104, "jNode": 105, "eje": "1", "tramo": "H-I", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 205, "iNode": 106, "jNode": 107, "eje": "2", "tramo": "E-F", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 206, "iNode": 107, "jNode": 108, "eje": "2", "tramo": "F-G", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 207, "iNode": 108, "jNode": 109, "eje": "2", "tramo": "G-H", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 208, "iNode": 109, "jNode": 110, "eje": "2", "tramo": "H-I", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 209, "iNode": 110, "jNode": 111, "eje": "2", "tramo": "I-J", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 210, "iNode": 112, "jNode": 113, "eje": "3", "tramo": "E-F", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 211, "iNode": 113, "jNode": 114, "eje": "3", "tramo": "F-G", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 212, "iNode": 114, "jNode": 115, "eje": "3", "tramo": "G-H", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 213, "iNode": 115, "jNode": 116, "eje": "3", "tramo": "H-I", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 214, "iNode": 116, "jNode": 117, "eje": "3", "tramo": "I-J", "directriz": "Y", "seccion": "V60x80"},
+    {"elementTag": 215, "iNode": 101, "jNode": 106, "eje": "E", "tramo": "1-2", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 216, "iNode": 106, "jNode": 112, "eje": "E", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 217, "iNode": 102, "jNode": 107, "eje": "F", "tramo": "1-2", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 218, "iNode": 107, "jNode": 113, "eje": "F", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 219, "iNode": 103, "jNode": 108, "eje": "G", "tramo": "1-2", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 220, "iNode": 108, "jNode": 114, "eje": "G", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 221, "iNode": 104, "jNode": 109, "eje": "H", "tramo": "1-2", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 222, "iNode": 109, "jNode": 115, "eje": "H", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 223, "iNode": 105, "jNode": 110, "eje": "I", "tramo": "1-2", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 224, "iNode": 110, "jNode": 116, "eje": "I", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"},
+    {"elementTag": 225, "iNode": 111, "jNode": 117, "eje": "J", "tramo": "2-3", "directriz": "X", "seccion": "V60x80"}
+  ],
+  "geomTransf": {
+    "tag_longitudinal": 2,
+    "tag_transversal": 3,
+    "nota": "viga沿Y: vecX=(1,0,0) para eje local Z vertical (eje fuerte Iy en gravedad). viga沿X: vecX=(0,1,0)."
+  },
+  "fuentes": [
+    "2017_67-101.dxf (RLE-VIGA V.60/80, verificado contra vigas_101.json del repo anterior)",
+    "Elevaciones Serie 400: V.60/80 = 0.60x0.80 m"
+  ],
+  "notas": [
+    "25 vigas principales en nivel 1S (Z=3.96m), conectando nodos esclavos 101..117.",
+    "Eje 1 no tiene columna en J (solo E..I), por eso eje J tiene 1 solo tramo (2-3).",
+    "Secundarias (posiciones 15, 17.49, 25, 35 del plano 101) se omiten en esta etapa.",
+    "Todos los nodos iNode/jNode existen en nodos.json a Z=3.96m."
+  ]
+}
