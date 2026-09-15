@@ -13,10 +13,12 @@ muros, tributarias), un modelo elástico lineal por nivel:
 Parámetros de material/sección y cargas → secciones_verticales.json /
 cargas_piso.json del modelo de referencia (G35, E=27.8 GPa, γ=24 kN/m³).
 
+Las funciones `lineas_base()` y `lineas_gravedad()` se reutilizan en el
+Paso 4 (sismo y cargas laterales) para generar un script análogo.
+
 Salidas (out/etapaN/):
     modelo_ops.py            script OpenSeesPy generado (listo para ejecutar)
     modelo_geometria.json    nodos/elementos por nivel (visores/Unity)
-    modelo_reacciones.json   reacciones en la base (ΣRz = 0 débil...)
     modelo_columnas.json     axial por columna y nivel (validación)
 
 Uso:
@@ -38,7 +40,6 @@ E = 27_805_600.0          # kPa = kN/m² (G35)
 G = 11_585_700.0
 GAMMA = 24.0
 SPP_COL = SECCOL["A"] * GAMMA * H_PISO          # 46.6 kN/columna/nivel
-# Cargas de piso del modelo de referencia (1° Subterráneo, planta cielos):
 QGP = {"pp_losa": 3.675, "pm": 2.55, "sc": 3.92}   # kN/m²
 Q_SUB = QGP["pp_losa"] + QGP["pm"] + QGP["sc"]     # ≈ 10.145 kN/m²
 
@@ -59,10 +60,12 @@ def tag_master(k):
     return 9500 + k
 
 
-def main():
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-    etapa = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+def lineas_base(etapa):
+    """Devuelve (lineas, meta) con el armado del modelo SIN cargas.
+
+    Las líneas asumen modelo plano (footer), lista para envolver en una
+    función al generar scripts de sismo (Paso 4).
+    """
     grilla = leer(etapa, "grilla_local.json")
     cols = leer(etapa, f"pilares_101.json")["columnas"]
     vigas = [v for v in leer(etapa, "vigas_101.json")["vigas"]
@@ -81,12 +84,11 @@ def main():
             "a_infl": next((p["area_influencia_m2"] for p in tribut["columnas"]
                             if p["tag"] == c["tag"]), 0.0),
         })
-    # centro de masa (promedio de columnas)
     cm = (sum(a["x"] for a in apoyos) / len(apoyos),
           sum(a["y"] for a in apoyos) / len(apoyos))
 
-    # --- generación del script OpenSeesPy ---
     L = ["from openseespy.opensees import *",
+         "import sys",
          'wipe()', 'model("basic", "-ndm", 3, "-ndf", 6)',
          f"# {len(apoyos)} columnas, {len(vigas)} vigas primarias, "
          f"{len(muros)} muros, {N_NIVELES} niveles",
@@ -100,7 +102,6 @@ def main():
          ]
     nbase = {}
 
-    # nodos base + losas por nivel + columnas
     for i, a in enumerate(apoyos, start=1):
         nbase[a["tag"]] = i
         L.append(f"node({i}, {a['x']:g}, {a['y']:g}, 0.0)")
@@ -121,7 +122,6 @@ def main():
             L.append(f"element('elasticBeamColumn', {etag}, {ini}, {fin}, "
                      f"100, 1)")
 
-    # vigas: conectar columnas consecutivas en los ejes presentes
     idx = 0
     nodo_x = {ex: {} for ex in ejes_x}
     for a in apoyos:
@@ -156,7 +156,6 @@ def main():
                 vigas_ids.append(etag)
             idx += 1
 
-    # muros: paño vertical en su eje de grilla → nodo en el centro del paño
     muro_ids = []
     slaves_por_nivel = {k: [] for k in range(1, N_NIVELES + 1)}
     for j, m in enumerate(muros, start=100):
@@ -187,67 +186,86 @@ def main():
                      f"{sec_id}, 1)")
             muro_ids.append(etag)
 
-    # diafragma rígido por nivel (columnas + muros)
     for k in range(1, N_NIVELES + 1):
         slaves = [tag_losa(k, nbase[a["tag"]]) for a in apoyos]
         slaves += slaves_por_nivel[k]
         L.append(f"rigidDiaphragm(3, {tag_master(k)}, "
                  f"{', '.join(str(s) for s in slaves)})")
 
-    # carga: qG×A_influ + peso propio columna, aplicada en cada nivel
+    meta = {
+        "apoyos": apoyos, "muros": muros, "cm": cm, "nbase": nbase,
+        "n_col": len(apoyos), "n_mur": len(muros),
+        "vigas_ids": vigas_ids, "muro_ids": muro_ids,
+        "ejes_x": ejes_x, "ejes_y": ejes_y,
+        "area_piso_m2": next((l["area_neta_m2"] for l in
+                              [leer(etapa, "losas_101.json")]), 0.0),
+    }
+    return L, meta
+
+
+def lineas_gravedad(L, meta, out_dir):
+    """Añade carga gravitatoria + análisis estático + extracción de axiales."""
+    apoyos = meta["apoyos"]
     L.append("timeSeries('Linear', 100)")
     L.append("pattern('Plain', 100, 100)")
     for a in apoyos:
         F = Q_SUB * a["a_infl"] + SPP_COL
         for k in range(1, N_NIVELES + 1):
-            L.append(f"load({tag_losa(k, nbase[a['tag']])}, 0.0, 0.0, {-F:g}, "
-                     f"0.0, 0.0, 0.0)")
+            L.append(f"load({tag_losa(k, meta['nbase'][a['tag']])}, 0.0, 0.0, "
+                     f"{-F:g}, 0.0, 0.0, 0.0)")
 
     L += ["system('BandSPD')", "numberer('RCM')", "constraints('Transformation')",
           "algorithm('Newton')", "integrator('LoadControl', 1.0)",
           "analysis('Static')", "ok = analyze(1)",
           "print('analisis:', ok)"]
 
-    # extracción de axial por columna/nivel + reacciones
-    L.append("import json")
-    L.append("res = {}")
+    L.append("reactions()")
+    L.append("res_col = {}")
     L.append("for k in range(1, 6):")
     L.append("    rows = []")
     for i, a in enumerate(apoyos, start=1):
         L.append(f"    rows.append((\"{a['tag']}\", "
                  f"eleResponse(10000 + k * 1000 + {i}, 'localForces')[0]))")
-    L.append("    res[k] = dict(rows)")
-    L.append("with open(" +
-             repr(str(OUT / f"etapa{etapa}" / "modelo_columnas.json")) +
+    L.append("    res_col[k] = dict(rows)")
+    L.append("import json")
+    L.append("with open(" + repr(str(out_dir / "modelo_columnas.json")) +
              ", 'w', encoding='utf-8') as f:")
-    L.append("    json.dump(res, f, ensure_ascii=False, indent=2)")
-    L.append("reactions()")
+    L.append("    json.dump(res_col, f, ensure_ascii=False, indent=2)")
     L.append("print('SigmaRz =', sum(nodeReaction(i, 3) "
              f"for i in range(1, {len(apoyos) + 1})))")
 
+
+def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    etapa = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     out_dir = OUT / f"etapa{etapa}"
     out_dir.mkdir(parents=True, exist_ok=True)
+    L, meta = lineas_base(etapa)
+    lineas_gravedad(L, meta, out_dir)
+
     script = out_dir / "modelo_ops.py"
     script.write_text("\n".join(L), encoding="utf-8")
 
     geom = {
         "etapa": etapa, "n_niveles": N_NIVELES, "h_piso_m": H_PISO,
         "z_niveles_m": {k: z_nivel(k) for k in range(1, N_NIVELES + 1)},
-        "centro_masa_m": cm,
-        "n_columnas": len(apoyos), "n_vigas": len(vigas_ids),
-        "n_muros": len(muros), "qG_kN_m2": Q_SUB,
+        "centro_masa_m": meta["cm"],
+        "n_columnas": meta["n_col"], "n_vigas": len(meta["vigas_ids"]),
+        "n_muros": meta["n_mur"], "qG_kN_m2": Q_SUB,
+        "area_piso_m2": meta["area_piso_m2"],
     }
     (out_dir / "modelo_geometria.json").write_text(
         json.dumps({"config": geom,
-                    "columnas": apoyos,
+                    "columnas": meta["apoyos"],
                     "vigas": [{"dir": "X" if e < 30000 else "Y",
-                               "etag": e} for e in vigas_ids],
-                    "muros": muros}, ensure_ascii=False, indent=2),
+                               "etag": e} for e in meta["vigas_ids"]],
+                    "muros": meta["muros"]}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
     print(f"MODELO Etapa {etapa} → {script}")
-    print(f"  {len(apoyos)} columnas · {len(vigas_ids)} vigas · "
-          f"{len(muros)} muros · {N_NIVELES} niveles (h={H_PISO}m)")
+    print(f"  {meta['n_col']} columnas · {len(meta['vigas_ids'])} vigas · "
+          f"{meta['n_mur']} muros · {N_NIVELES} niveles (h={H_PISO}m)")
     print(f"  Cargas: qG={Q_SUB:.2f} kN/m²  (referencia 1° Subterráneo) + "
           f"PP columna {SPP_COL:.1f} kN/nivel")
 
