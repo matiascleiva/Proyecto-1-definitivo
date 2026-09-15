@@ -32,7 +32,7 @@ def resumen(etapa):
     geo = json.loads((o / "modelo_geometria.json").read_text(encoding="utf-8"))
     cfg = geo["config"]
     print(tab(["Parámetro", "Valor", "", "", ""], [0, 50, 0, 0, 0]).rstrip())
-    for kcnf, lab in (("n_columnas", "Columnas/nivel"), ("n_vigas", "Vigas/nivel"),
+    for kcnf, lab in (("n_columnas", "Columnas/nivel"), ("n_vigas", "Vigas (total)"),
                       ("n_muros", "Muros/nivel"), ("n_niveles", "Niveles"),
                       ("area_piso_m2", "Área de piso [m²]"),
                       ("qG_kN_m2", "Carga qG [kN/m²]")):
@@ -100,8 +100,9 @@ def resumen(etapa):
         with open(o / "sismo_envolvente.json", "w", encoding="utf-8") as f:
             json.dump(env, f, ensure_ascii=False, indent=2)
     print("\n-- ENVOLVENTE SÍSMICA (máx |P|,|Vy|,|Vz|,|My|,|Mz| entre X± Y±) --")
-    cols = [t for t in env if not t.startswith("MUR")]
-    murs = [t for t in env if t.startswith("MUR")]
+    vigas = [t for t in env if t.startswith("B-")]
+    murs = [t for t in env if t.startswith("MUR-")]
+    cols = [t for t in env if not (t.startswith("B-") or t.startswith("MUR-"))]
     pc = max((env[t][nv]["P"] for t in cols for nv in env[t]), default=0)
     pc_t = max((t for t in cols), key=lambda t: max(env[t][nv]["P"] for nv in env[t]))
     mm = max((env[t][nv]["My"] for t in murs for nv in env[t]), default=0)
@@ -110,10 +111,15 @@ def resumen(etapa):
     mv = max((env[t][nv]["Mz"] for t in cols for nv in env[t]), default=0)
     mv_t = max((t for t in cols),
                key=lambda t: max(env[t][nv]["Mz"] for nv in env[t]))
+    mf = max((env[t][nv].get("My", 0) for t in vigas for nv in env[t]), default=0)
+    mf_t = max((t for t in vigas),
+               key=lambda t: max(env[t][nv].get("My", 0) for nv in env[t]))
     print(f"  Columna con mayor axial     : {pc_t}  P={pc:,.0f} kN")
     print(f"  Columna con mayor Mz        : {mv_t}  Mz={mv:,.0f} kN·m")
     print(f"  Muro con mayor My (base)    : {mm_t}  My={mm:,.0f} kN·m")
-    print(f"  Elementos envolvente: {len(env)}")
+    print(f"  Viga con mayor My           : {mf_t}  My={mf:,.0f} kN·m")
+    print(f"  Elementos envolvente: {len(env)} "
+          f"({len(cols)} col + {len(murs)} muros + {len(vigas)} vigas)")
 
 
 def main():
